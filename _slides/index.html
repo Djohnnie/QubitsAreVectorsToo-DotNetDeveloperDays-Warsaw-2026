@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Qubits Are Vectors Too / Starter deck</title>
+  <style>
+    :root { color-scheme: dark; background: #161616; color: #ccc; font-family: system-ui, sans-serif; }
+    body { margin: 0; min-height: 100vh; display: grid; grid-template-rows: 1fr auto; }
+    main { display: grid; place-items: center; min-height: 0; }
+    img { display: block; width: min(100vw, calc((100vh - 70px) * 16 / 9)); height: auto; }
+    nav { display: flex; gap: 20px; align-items: center; justify-content: center; padding: 14px; }
+    button, a { color: #fff; background: #282828; border: 1px solid #888; border-radius: 6px; padding: 8px 14px; font: inherit; }
+    button { cursor: pointer; }
+    button:disabled { opacity: .4; cursor: default; }
+    :focus-visible { outline: 3px solid #ff6a3f; outline-offset: 3px; }
+    #status { min-width: 55px; text-align: center; }
+    @media (max-width: 560px) { nav { flex-wrap: wrap; gap: 8px; } }
+  </style>
+</head>
+<body>
+  <main><img id="slide" src="slide-01.svg" alt="Slide 1: Qubits Are Vectors Too"></main>
+  <nav aria-label="Slide navigation">
+    <button id="previous" type="button">Previous</button>
+    <span id="status" aria-live="polite">1 / 10</span>
+    <button id="next" type="button">Next</button>
+    <a id="source" href="slide-01.svg">Open SVG</a>
+    <a href="slide-template.svg">Blank template</a>
+  </nav>
+  <script>
+    const titles = [
+      "Qubits Are Vectors Too", "Johnny Hooyberghs", "Scan to visit the repository",
+      "Session roadmap", "Start with a vector", "A qubit has two amplitudes",
+      "The Hadamard gate", "Prepare, transform, measure", "Demo placeholder",
+      "Thank you and questions"
+    ];
+    let current = 0;
+    const slide = document.getElementById("slide");
+    const previous = document.getElementById("previous");
+    const next = document.getElementById("next");
+    function show(index) {
+      current = Math.max(0, Math.min(titles.length - 1, index));
+      const file = `slide-${String(current + 1).padStart(2, "0")}.svg`;
+      slide.src = file;
+      slide.alt = `Slide ${current + 1}: ${titles[current]}`;
+      document.getElementById("source").href = file;
+      document.getElementById("status").textContent = `${current + 1} / ${titles.length}`;
+      previous.disabled = current === 0;
+      next.disabled = current === titles.length - 1;
+    }
+    previous.addEventListener("click", () => show(current - 1));
+    next.addEventListener("click", () => show(current + 1));
+    document.addEventListener("keydown", event => {
+      if (event.target.closest("button, a, input, textarea, select") || event.altKey || event.ctrlKey || event.metaKey) return;
+      if (["ArrowRight", "PageDown", " ", "ArrowLeft", "PageUp", "Home", "End"].includes(event.key)) {
+        event.preventDefault();
+        if (["ArrowRight", "PageDown", " "].includes(event.key)) show(current + 1);
+        if (["ArrowLeft", "PageUp"].includes(event.key)) show(current - 1);
+        if (event.key === "Home") show(0);
+        if (event.key === "End") show(titles.length - 1);
+      }
+    });
+    show(0);
+  </script>
+</body>
+</html>
